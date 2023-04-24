@@ -5,7 +5,7 @@ let idTasks = 0;
 const task = document.getElementById('new-task');
 const list = document.getElementById('ListTodo');
 const allChecked = document.getElementById('allChecked');
-const submitTask = document
+const submitTask = document.getElementById('submitTask');
 
 
 function addTaskInList (todoValue) {
@@ -17,14 +17,13 @@ function addTaskInList (todoValue) {
 
 
 function deleteTask (idTodo) {
-    const arrLi = list.querySelectorAll('ul > li');
+    const arrLi = list.querySelectorAll('li');
     console.log(arrLi)
     listTasks = listTasks.filter((id) => {id === idTodo});
     let unnecessaryElement ;
     arrLi.forEach(item => {
         
         if(item.id === idTodo){
-            
             unnecessaryElement = item.id
         }
     });
@@ -36,12 +35,10 @@ function deleteTask (idTodo) {
 function renderList(...args) {
    
     if(!args.length) {
-        listTasks.querySelector('ul').innerHTML = ''
+        list.innerHTML = ''
+        debugger
         listTasks.forEach(item => {
-            debugger
-            template(item);
-            debugger
-           
+            template(item);   
         })
     }
 
@@ -56,29 +53,15 @@ function template (obj) {
     const liElement = document.createElement('li');
     liElement.setAttribute("class", "list-group-item");
     liElement.setAttribute("id", `${obj.id}`);
-    
-    liElement.innerHTML = `<input class="form-check-input me-1" type="checkbox" ${obj.complete ? checked : ''}>
+    debugger
+    liElement.innerHTML = `<input class="form-check-input me-1" type="checkbox">
     ${obj.value}
+    
     <button type="button" class="btn-close" aria-label="Delete"></button>`
-    list.querySelector('ul').append(liElement);
+    debugger
+    list.append(liElement);
+    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -87,8 +70,6 @@ function template (obj) {
 
 task.addEventListener('submit', () => {
     const todo = task.querySelector('input');
-    
-    
     addTaskInList(todo.value);
     todo.value = '';
 })
@@ -96,27 +77,18 @@ task.addEventListener('submit', () => {
 allChecked.addEventListener('click', () => {
    
     console.log(allChecked.checked)
-    if(allChecked) {
-        listTasks.forEach(item => {
-            item.checked = true;
-            renderList()
+        listTasks.forEach((item, index) => {
+            item.complete = allChecked.checked ? true : false;
+            list.querySelectorAll('li > input')[index].checked = item.complete;
         })
-        
-        listTasks.forEach(item => {
-            item.checked = false;
-            renderList();
-        })
-
-    }
-    
 })
 
 
 list.addEventListener('click', () => {
    
-    const activeButton = list.querySelectorAll('ul > li > button:hover');
+    const activeButton = list.querySelectorAll('li > button:hover');
     
-    const idTodo = activeButton[0].parentNode.id;
+    const idTodo = activeButton.parentNode.id;
     
     deleteTask(idTodo);
 })
