@@ -119,6 +119,11 @@ list.addEventListener('keydown', (event) => {
     const activeInput = list.querySelector('input:focus');
     if(event.key === 'Enter') {
         const idParent = activeInput.offsetParent.id;
-        console.log(idParent);
+        listTasks.forEach(item => {
+            if(idParent === item.id.toString()){
+                item.value = activeInput.value;
+            }
+        })
+        render()
     }
 })
