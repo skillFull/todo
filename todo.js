@@ -7,6 +7,13 @@ const list = document.getElementById('ListTodo');
 const allComplete = document.getElementById('allComplete');
 const submitTask = document.getElementById('submitTask');
 const allDeleteCompleteButton = document.getElementById('allDeleteComplete');
+const AllButton = document.getElementById('All');
+const ActiveButton = document.getElementById('Active');
+const CompletedButton = document.getElementById('Completed');
+
+
+
+
 
 function addTaskInList (todoValue) {
     const newTask = {
@@ -30,11 +37,14 @@ function deleteTask (idTodo) {
 }
 
 function render() {
-
+    const arrObj = arguments[0] || listTasks;
     list.innerHTML = ''
-        listTasks.forEach(item => {
+        arrObj.forEach(item => {
             list.innerHTML += `${template(item)}`
         })
+    AllButton.innerHTML = `All(${listTasks.length})`;
+    ActiveButton.innerHTML = `Active(${filterComplete('!').length})`;
+    CompletedButton.innerHTML = `Completed(${filterComplete().length})`;
 }
 
 function template (item) {
@@ -65,11 +75,15 @@ function filterComplete(...args) {
  
  function allDeleteComplete() {
      listTasks = filterComplete("!");
+     checkAllPressCheckbox();
      render();
  }
 
 
-
+function checkAllPressCheckbox () {
+    const allCompleteTask = listTasks.length === filterComplete().length && listTasks.length;
+    allComplete.checked = allCompleteTask;
+}
 
 
 
@@ -94,8 +108,8 @@ list.addEventListener('click', (event) => {
                 item.complete = activeButton.checked;
             }
         })
-        const allCompleteTask = listTasks.length === filterComplete().length;
-        allComplete.checked = allCompleteTask;
+        render()
+      checkAllPressCheckbox();
     }
     
 })
@@ -110,20 +124,104 @@ list.addEventListener('dblclick', (event) => {
         elInput.setAttribute('type', 'text');
         elInput.value = activeLi.textContent;
         activeLi.textContent = '';
+        
         activeLi.append(elInput);
     }
 
 })
 
-list.addEventListener('keydown', (event) => {
-    const activeInput = list.querySelector('input:focus');
-    if(event.key === 'Enter') {
+
+function inputChangesInTodo (event){
+    const activeInput = event.target;  
+    if(event.key === 'Enter' ) {
         const idParent = activeInput.offsetParent.id;
         listTasks.forEach(item => {
             if(idParent === item.id.toString()){
                 item.value = activeInput.value;
             }
         })
-        render()
+        return render()
     }
+
+    if(event.key ==='Escape'){
+        render();
+     }
+
+}
+
+
+AllButton.addEventListener('click', () => {
+    render()
 })
+ActiveButton.addEventListener('click', () => {
+    const notComplete = filterComplete('!');
+    render(notComplete);
+})
+
+CompletedButton.addEventListener('click', () => {
+    const Complete = filterComplete();
+    render(Complete);
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+list.addEventListener('keydown', inputChangesInTodo)
+
+list.addEventListener('blur', (event) => {
+    const activeInput = event.target; 
+    if(event.type === 'focusout') {
+        const idParent = activeInput.offsetParent.id;
+        listTasks.forEach(item => {
+            if(idParent === item.id.toString()){
+                item.value = activeInput.value;
+            }
+        })
+    }
+    render()
+})
+
+
