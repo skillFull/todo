@@ -2,12 +2,13 @@
 
 let listTasks = [];
 let idTasks = 0;
+let nameButton = 'all';
 const task = document.getElementById('new-task');
 const list = document.getElementById('ListTodo');
 const allComplete = document.getElementById('allComplete');
 const submitTask = document.getElementById('submitTask');
 const allDeleteCompleteButton = document.getElementById('allDeleteComplete');
-const toggler = document.getElementById('group-button-lists')
+const togglerButtons = document.getElementById('group-button-lists')
 const togglerPages = document.querySelector('.pages');
 let currentNumberPage = 1;
 
@@ -24,7 +25,18 @@ function addTaskInList (todoValue) {
     render();
 }
 
+function toggler () {
+    if(nameButton === 'all'){
+        return listTasks;
+    }
+    if(nameButton === 'active') {
+        return filterComplete('!')
+    }
+    if(nameButton === 'completed'){
+        return filterComplete();
+    }
 
+}
 
 
 
@@ -36,7 +48,7 @@ function deleteTask (idTodo) {
 }
 
 function render() {
-    const arrObj = arguments[0] || listTasks;
+    const arrObj = toggler();
     const pages = Number(Math.ceil(arrObj.length / 5));
     const start = ((currentNumberPage - 1) * 5);
     const end = start + 5 <= arrObj.length ? start + 5 : arrObj.length ;
@@ -51,9 +63,9 @@ function render() {
             togglerPages.innerHTML += `<li class="${i}">${i}</li>`;
         }
 
-    toggler.children[0].innerHTML = `All(${listTasks.length})`;
-    toggler.children[1].innerHTML = `Active(${filterComplete('!').length})`;
-    toggler.children[2].innerHTML = `Completed(${filterComplete().length})`;
+    togglerButtons.children[0].innerHTML = `All(${listTasks.length})`;
+    togglerButtons.children[1].innerHTML = `Active(${filterComplete('!').length})`;
+    togglerButtons.children[2].innerHTML = `Completed(${filterComplete().length})`;
 
 }
 
@@ -168,19 +180,10 @@ function removeChange (event) {
     }
 }
 
-toggler.addEventListener('click', (event) => {
-    const nameButton = event.target.value
-    switch(nameButton) {
-        case 'all':
-            render();
-            break;
-        case 'active':
-            render(filterComplete('!'));
-            break;
-        case 'completed':
-            render(filterComplete());
-            break;
-   }
+togglerButtons.addEventListener('click', (event) => {
+    nameButton = event.target.value;
+    currentNumberPage = 1;
+    render();
 })
 
 list.addEventListener('keydown', saveChange);
