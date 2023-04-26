@@ -7,13 +7,9 @@ const list = document.getElementById('ListTodo');
 const allComplete = document.getElementById('allComplete');
 const submitTask = document.getElementById('submitTask');
 const allDeleteCompleteButton = document.getElementById('allDeleteComplete');
-const AllButton = document.getElementById('All');
-const ActiveButton = document.getElementById('Active');
-const CompletedButton = document.getElementById('Completed');
-
-
-
-
+const toggler = document.getElementById('group-button-lists')
+const togglerPages = document.querySelector('.pages');
+let currentNumberPage = 1;
 
 function addTaskInList (todoValue) {
     const newTask = {
@@ -29,6 +25,9 @@ function addTaskInList (todoValue) {
 }
 
 
+
+
+
 function deleteTask (idTodo) {
  
     listTasks = listTasks.filter(item => item.id.toString() !== idTodo);
@@ -38,13 +37,24 @@ function deleteTask (idTodo) {
 
 function render() {
     const arrObj = arguments[0] || listTasks;
-    list.innerHTML = ''
-        arrObj.forEach(item => {
+    const pages = Number(Math.ceil(arrObj.length / 5));
+    const start = ((currentNumberPage - 1) * 5);
+    const end = start + 5 <= arrObj.length ? start + 5 : arrObj.length ;
+    const currentPage = arrObj.slice(start, end);
+    list.innerHTML = '';
+    togglerPages.innerHTML = '';
+        currentPage.forEach(item => {
             list.innerHTML += `${template(item)}`
         })
-    AllButton.innerHTML = `All(${listTasks.length})`;
-    ActiveButton.innerHTML = `Active(${filterComplete('!').length})`;
-    CompletedButton.innerHTML = `Completed(${filterComplete().length})`;
+
+        for(let i = 1; i <= pages; i++) {
+            togglerPages.innerHTML += `<li class="${i}">${i}</li>`;
+        }
+
+    toggler.children[0].innerHTML = `All(${listTasks.length})`;
+    toggler.children[1].innerHTML = `Active(${filterComplete('!').length})`;
+    toggler.children[2].innerHTML = `Completed(${filterComplete().length})`;
+
 }
 
 function template (item) {
@@ -91,7 +101,7 @@ function checkAllPressCheckbox () {
 allComplete.addEventListener('click', (event) => {
         const allCompleteButton = event.target;
         listTasks.forEach((item) => item.complete = allCompleteButton.checked)
-    render();
+        render();
 })
 
 list.addEventListener('click', (event) => {
@@ -122,106 +132,61 @@ list.addEventListener('dblclick', (event) => {
     if(activeLi.tagName === 'DIV') {
         const elInput = document.createElement('input');
         elInput.setAttribute('type', 'text');
+        elInput.setAttribute('id', 'editorTodo');
         elInput.value = activeLi.textContent;
         activeLi.textContent = '';
-        
+        elInput.focus();
         activeLi.append(elInput);
+
+        const editorTodo = document.getElementById('editorTodo');
+        editorTodo.addEventListener('blur', saveChange);
     }
 
 })
 
 
-function inputChangesInTodo (event){
+function saveChange (event){
     const activeInput = event.target;  
-    if(event.key === 'Enter' ) {
+    if(event.key === 'Enter' || event.type === 'blur') {
         const idParent = activeInput.offsetParent.id;
         listTasks.forEach(item => {
             if(idParent === item.id.toString()){
                 item.value = activeInput.value;
             }
         })
-        return render()
+        render()
     }
-
-    if(event.key ==='Escape'){
-        render();
-     }
-
+    removeChange(event);
+    
 }
 
 
-AllButton.addEventListener('click', () => {
-    render()
-})
-ActiveButton.addEventListener('click', () => {
-    const notComplete = filterComplete('!');
-    render(notComplete);
-})
-
-CompletedButton.addEventListener('click', () => {
-    const Complete = filterComplete();
-    render(Complete);
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-list.addEventListener('keydown', inputChangesInTodo)
-
-list.addEventListener('blur', (event) => {
-    const activeInput = event.target; 
-    if(event.type === 'focusout') {
-        const idParent = activeInput.offsetParent.id;
-        listTasks.forEach(item => {
-            if(idParent === item.id.toString()){
-                item.value = activeInput.value;
-            }
-        })
+function removeChange (event) {
+    if(event.key === 'Escape') {
+        editorTodo.removeEventListener('blur', saveChange);
+        render();
     }
-    render()
+}
+
+toggler.addEventListener('click', (event) => {
+    const nameButton = event.target.value
+    switch(nameButton) {
+        case 'all':
+            render();
+            break;
+        case 'active':
+            render(filterComplete('!'));
+            break;
+        case 'completed':
+            render(filterComplete());
+            break;
+   }
 })
 
+list.addEventListener('keydown', saveChange);
 
+togglerPages.addEventListener('click', (event) => {
+    
+    currentNumberPage = Number(event.target.className);
+    render()
+})
