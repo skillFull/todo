@@ -8,7 +8,7 @@ const allDeleteCompleteButton = document.getElementById('allDeleteComplete');
 const togglerButtons = document.getElementById('group-button-lists');
 const togglerPages = document.querySelector('.pages');
 let currentNumberPage = 1;
-
+let pagesCount = 0;
 function addTaskInList(todoValue) {
   if(_.trim(todoValue)) {
     const newTask = {
@@ -49,14 +49,20 @@ function render() {
   const end = start + 5 <= arrObj.length ? start + 5 : arrObj.length;
   const currentPage = arrObj.slice(start, end);
   list.innerHTML = '';
-  togglerPages.innerHTML = '';
+  
   currentPage.forEach((item) => {
     list.innerHTML += `${template(item)}`;
   });
 
-  for (let i = 1; i <= pages; i++) {
-    togglerPages.innerHTML += `<li class="${i}">${i}</li>`;
+  if(pages !== pagesCount) {
+    pagesCount = pages;
+    togglerPages.innerHTML = '';
+    for (let i = 1; i <= pages; i++) {
+        togglerPages.innerHTML += `<li class="${i}" tabindex="0">${i}</li>`
+    }
   }
+
+  
 
   togglerButtons.children[0].innerHTML = `All(${listTasks.length})`;
   togglerButtons.children[1].innerHTML = `Active(${filterComplete('!').length})`;
