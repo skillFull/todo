@@ -10,15 +10,18 @@ const togglerPages = document.querySelector('.pages');
 let currentNumberPage = 1;
 
 function addTaskInList(todoValue) {
-  const newTask = {
-    id: idTasks,
-    value: todoValue,
-    complete: false,
-  };
-
-  listTasks.push(newTask);
-  idTasks++;
-  render();
+  if(_.trim(todoValue)) {
+    const newTask = {
+      id: idTasks,
+      value: todoValue,
+      complete: false,
+    };
+  
+    listTasks.push(newTask);
+    idTasks++;
+    render();
+  }
+  
 }
 
 function toggler() {
@@ -58,7 +61,7 @@ function render() {
   togglerButtons.children[0].innerHTML = `All(${listTasks.length})`;
   togglerButtons.children[1].innerHTML = `Active(${filterComplete('!').length})`;
   togglerButtons.children[2].innerHTML = `Completed(${filterComplete().length})`;
-}
+} 
 
 function template(item) {
   return `<li class="list-group-item" id="${item.id}">
