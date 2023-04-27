@@ -1,0 +1,44 @@
+html {
+    display: grid;
+    justify-items: center;
+}
+
+
+body {
+    width: 80%;
+    display: grid;
+    justify-items: center;
+    justify-content: stretch;
+    
+    
+}
+
+.new-task-container {
+    width: 40%;
+
+}
+
+.list-group-item {
+    display: grid;
+    justify-items: start;
+    grid-template: "a a a" auto;
+}
+
+.pages > li {
+    display: grid;
+    width: 25px;
+    height: 25px;
+    justify-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    list-style: none;
+    background-color: aqua;
+    border-radius: 4px;
+}
+.pages {
+    display: grid;
+    justify-items: center;
+    justify-content: center;
+    justify-self: center;
+}
