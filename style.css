@@ -13,14 +13,14 @@ body {
     
 }
 
-#submitTask {
+#submit-task {
     width: 40%;
     height: 400px;
     border-radius: 8px;
     background-color: #E7E8D1;
 }
 
-#allComplete {
+#all-complete {
     background-color: #E7E8D1;
 }
 
@@ -69,6 +69,10 @@ body {
     background-color: rgb(167, 121, 38);
     border-radius: 14px;
 }
+.pages > li:focus {
+    background-color: #A7BEAE;
+}
+
 .pages {
     display: flex;
     justify-items: center;
@@ -101,7 +105,7 @@ body {
     transition-property: background-color;
 }
 
-#allDeleteComplete {
+#all-delete-complete {
     margin-top: 12px;
     margin-bottom: 10px;
     width: 10em;
@@ -113,8 +117,8 @@ body {
     background-color:#B85042;
     border: 0;
 }
-#allDeleteComplete:active {
-    background-color: black;
+#all-delete-complete:active {
+    background-color: #f8a296;
     transition-duration: 0.14s;
     transition-property: background-color;
 }

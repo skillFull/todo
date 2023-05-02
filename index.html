@@ -9,41 +9,36 @@
     <link href="./style.css" rel="stylesheet">
 </head>
 <body>
-    <div class='new-task-container'>
-    <h1>TodoJS App</h1>
-    <form id="new-task" onsubmit="return false">
-        <div class="input-group mb-3">
-            <input type="text" class="form-control"  aria-label="New task" aria-describedby="basic-addon2">
-            <button type="submit" class="btn btn-primary">Add</button>
-        </div>
-        
-    </form>
+    <div class="new-task-container">
+        <h1>TodoJS App</h1>
+        <form id="new-task" onsubmit="return false">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" aria-label="New task" aria-describedby="basic-addon2">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+        </form>
     </div>
-
-    <section  id="submitTask">
+    <section  id="submit-task">
         <div class="general-checkbox">
-            <input id="allComplete" class="form-check-input me-1" type="checkbox" value="" aria-label="allChecked">
-            <label class="form-check-label" for="flexCheckIndeterminate">
+            <input id="all-complete" class="form-check-input me-1" type="checkbox">
+            <label class="form-check-label" for="flex-check-indeterminate">
             Check all todos
-          </label>
+            </label>
         </div>
-        <ul class="list-group" id="ListTodo">
-
+        <ul class="list-group" id="list-todo">
         </ul>
         <ul class="pages">
-
         </ul>
         <div id="group-button-lists">
-            <button  type="button" class="all" value="all">
-            <button  type="button" class="active" value="active">
-            <button  type="button" class="completed" value="completed">
+            <button type="button" class="all" value="all">
+            <button type="button" class="active" value="active">
+            <button type="button" class="completed" value="completed">
         </div>
-        <button id="allDeleteComplete">
+        <button id="all-delete-complete">
             Delete completed
         </button>
     </section>
-
 </body>
 <script src="https://cdn.jsdelivr.net/lodash/4.10.0/lodash.js"></script>
-<script src="./todo.js" defer></script>
+<script src="./script.js" defer></script>
 </html>

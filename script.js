@@ -2,18 +2,37 @@ let listTasks = [];
 let idTasks = 0;
 let nameButton = 'all';
 const task = document.getElementById('new-task');
-const list = document.getElementById('ListTodo');
-const allComplete = document.getElementById('allComplete');
-const allDeleteCompleteButton = document.getElementById('allDeleteComplete');
+const list = document.getElementById('list-todo');
+const allComplete = document.getElementById('all-complete');
+const allDeleteCompleteButton = document.getElementById('all-delete-complete');
 const togglerButtons = document.getElementById('group-button-lists');
 const togglerPages = document.querySelector('.pages');
 let currentNumberPage = 1;
 let pagesCount = 0;
+
+function stringNormalizer(str) {
+  let space = 0;
+  str = str.trim();
+  const clearArrayChar = [];
+  str.split('').forEach(item => {
+    if(item !== ' ' && (space === 0 || space === 1)) { 
+      clearArrayChar.push(item);
+      // eslint-disable-next-line no-unused-expressions
+      space === 0 ? space : space--;
+    }
+    if(item === ' ' && space === 0){
+      clearArrayChar.push(item);
+      space++;
+    }
+  });
+  return clearArrayChar.join('');   
+}
+
 function addTaskInList(todoValue) {
-  if(_.trim(todoValue)) {
+  if(todoValue.trim()) {
     const newTask = {
       id: idTasks,
-      value: todoValue,
+      value: stringNormalizer(todoValue),
       complete: false,
     };
   
@@ -49,32 +68,30 @@ function render() {
   const end = start + 5 <= arrObj.length ? start + 5 : arrObj.length;
   const currentPage = arrObj.slice(start, end);
   list.innerHTML = '';
-  
+
   currentPage.forEach((item) => {
     list.innerHTML += `${template(item)}`;
   });
 
-  if(pages !== pagesCount) {
+  if (pages !== pagesCount) {
     pagesCount = pages;
     togglerPages.innerHTML = '';
     for (let i = 1; i <= pages; i++) {
-        togglerPages.innerHTML += `<li class="${i}" tabindex="0">${i}</li>`
+      togglerPages.innerHTML += `<li class="${i}" tabindex="0">${i}</li>`
     }
   }
-
-  
 
   togglerButtons.children[0].innerHTML = `All(${listTasks.length})`;
   togglerButtons.children[1].innerHTML = `Active(${filterComplete('!').length})`;
   togglerButtons.children[2].innerHTML = `Completed(${filterComplete().length})`;
-} 
+}
 
 function template(item) {
   return `<li class="list-group-item" id="${item.id}">
-        <input class="form-check-input me-1" type="checkbox" ${item.complete ? 'checked' : ''}>
-        <div>${_.escape(item.value)}</div>
-        <button type="button" class="btn-close" aria-label="Delete"></button>
-    </li>`;
+            <input class="form-check-input me-1" type="checkbox" ${item.complete ? 'checked' : ''}>
+            <div>${_.escape(item.value)}</div>
+            <button type="button" class="btn-close" aria-label="Delete"></button>
+          </li>`;
 }
 
 function add() {
@@ -130,7 +147,7 @@ list.addEventListener('click', (event) => {
 task.addEventListener('submit', add);
 allDeleteCompleteButton.addEventListener('click', allDeleteComplete);
 
-list.addEventListener('dblclick', (event) => {
+list.addEventListener('dblclick', (event) => {  
   const activeLi = event.target;
   if (activeLi.tagName === 'DIV') {
     const elInput = document.createElement('input');
@@ -140,9 +157,7 @@ list.addEventListener('dblclick', (event) => {
     activeLi.textContent = '';
     elInput.focus();
     activeLi.append(elInput);
-
-    const editorTodo = document.getElementById('editorTodo');
-    editorTodo.addEventListener('blur', saveChange);
+    elInput.addEventListener('blur', saveChange);
   }
 });
 
@@ -152,10 +167,11 @@ function saveChange(event) {
     const idParent = activeInput.offsetParent.id;
     listTasks.forEach((item) => {
       if (idParent === item.id.toString()) {
-        item.value = activeInput.value;
+        // eslint-disable-next-line max-len
+        item.value = activeInput.value.trim().length !== 0 ? stringNormalizer(activeInput.value) : item.value;
+        render();
       }
     });
-    render();
   }
   removeChange(event);
 }
@@ -179,3 +195,5 @@ togglerPages.addEventListener('click', (event) => {
   currentNumberPage = Number(event.target.className) || currentNumberPage;
   render();
 });
+
+render();
