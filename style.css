@@ -53,6 +53,10 @@ body {
     background-color: #E7E8D1;
 }
 
+.list-group-item > li > div {
+    display: flex;
+    max-width: 1fr;
+}
 
 .pages > li {
     font-size: 14px;
@@ -69,7 +73,7 @@ body {
     background-color: rgb(167, 121, 38);
     border-radius: 14px;
 }
-.pages > li:focus {
+.pages > li[data-checked=true] {
     background-color: #A7BEAE;
 }
 
@@ -99,7 +103,7 @@ body {
     transition-property: background-color;
 }
 
-#group-button-lists > button:focus {
+#group-button-lists > button[data-activeButton=true] {
     background-color: #E7E8D1;
     transition-duration: 0.1s;
     transition-property: background-color;

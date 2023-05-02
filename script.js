@@ -73,17 +73,20 @@ function render() {
     list.innerHTML += `${template(item)}`;
   });
 
-  if (pages !== pagesCount) {
-    pagesCount = pages;
-    togglerPages.innerHTML = '';
-    for (let i = 1; i <= pages; i++) {
-      togglerPages.innerHTML += `<li class="${i}" tabindex="0">${i}</li>`
+  togglerPages.innerHTML = '';
+  for (let i = 1; i <= pages; i++) {
+    if (i === currentNumberPage) {
+      togglerPages.innerHTML += `<li class="${i}" tabindex="0" data-checked="true">${i}</li>`
+      continue;
     }
+    togglerPages.innerHTML += `<li class="${i}" tabindex="0">${i}</li>`
   }
+  
+  checkAllPressCheckbox();
 
-  togglerButtons.children[0].innerHTML = `All(${listTasks.length})`;
-  togglerButtons.children[1].innerHTML = `Active(${filterComplete('!').length})`;
-  togglerButtons.children[2].innerHTML = `Completed(${filterComplete().length})`;
+  togglerButtons.innerHTML = `<button type="button" class="all" value="all" data-activeButton=${nameButton === 'all' ? "true" : "false"}>All(${listTasks.length})</button>
+                              <button type="button" class="active" value="active" data-activeButton=${nameButton === 'active' ? "true" : "false"}>Active(${filterComplete('!').length})</button>
+                              <button type="button" class="completed" value="completed" data-activeButton=${nameButton === 'completed' ? "true" : "false"}>Complete(${filterComplete().length})</button>`
 }
 
 function template(item) {
@@ -111,12 +114,12 @@ function filterComplete(...args) {
 function allDeleteComplete() {
   listTasks = filterComplete('!');
   checkAllPressCheckbox();
+  nameButton = 'all'
   render();
 }
 
 function checkAllPressCheckbox() {
-  const allCompleteTask = listTasks.length === filterComplete().length && listTasks.length;
-  allComplete.checked = allCompleteTask;
+  allComplete.checked = listTasks.length === filterComplete().length && listTasks.length;
 }
 
 allComplete.addEventListener('click', (event) => {
